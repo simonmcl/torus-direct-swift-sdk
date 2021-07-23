@@ -16,6 +16,7 @@ import BestLogger
 open class TorusSwiftDirectSDK{
     
     var torusUtils : TorusUtils!
+    let network: EthereumNetwork
     var endpoints = Array<String>()
     var torusNodePubKeys = Array<TorusNodePub>()
     let aggregateVerifierType: verifierTypes?
@@ -30,6 +31,7 @@ open class TorusSwiftDirectSDK{
         // loggers
         self.torusUtils = TorusUtils(label: "TorusUtils", loglevel: loglevel)
         self.logger = BestLogger(label: "TorusLogger", level: loglevel)
+        self.network = network
         
         // FetchNodedetails - Initialised with ropsten proxyaddress
         // for mainnet - 0x638646503746d5456209e33a2ff5e3226d698bea

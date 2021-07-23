@@ -10,7 +10,7 @@ import UIKit
 import TorusUtils
 import PromiseKit
 import SafariServices
-
+import FetchNodeDetails
 
 @available(iOS 11.0, *)
 typealias torus = TorusSwiftDirectSDK
@@ -91,6 +91,19 @@ extension TorusSwiftDirectSDK{
         notificationCenter.post(notification)
     }
     
+//    public func validate() -> Promise<Bool>{
+//        let (tempPromise, seal) = Promise<Bool>.pending()
+//        
+//        // Validate fetchNodeDetails
+//        let verfierList = VerifierListContract(network: self.network)
+//        verfierList.verifierExists(verifier: self.aggregateVerifierName).done{data in
+//            seal.fulfill(data)
+//        }.catch{ error in
+//            seal.reject(error)
+//        }
+//        return tempPromise
+//    }
+//    
     public func parseURL(url: URL) -> [String: String]{
         var responseParameters = [String: String]()
         if let query = url.query {
