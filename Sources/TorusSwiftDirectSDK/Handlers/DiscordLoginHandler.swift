@@ -18,14 +18,17 @@ class DiscordLoginHandler: AbstractLoginHandler{
     let nonce = String.randomString(length: 10)
     let extraQueryParams: [String: String]
     let defaultParams: [String:String]
+	
+	private var session: URLSession
     
-    public init(loginType: SubVerifierType = .web, clientID: String, redirectURL: String, browserRedirectURL: String?, extraQueryParams: [String: String] = [:]){
+	public init(loginType: SubVerifierType = .web, clientID: String, redirectURL: String, browserRedirectURL: String?, extraQueryParams: [String: String] = [:], session: URLSession){
         self.loginType = loginType
         self.clientID = clientID
         self.redirectURL = redirectURL
         self.extraQueryParams = extraQueryParams
         self.browserRedirectURL = browserRedirectURL
         self.defaultParams = ["scope": "email identify", "response_type": "token"]
+		self.session = session
         
         let tempState = ["nonce": self.nonce, "redirectUri": self.redirectURL, "redirectToAndroid": "true"]
         let jsonData = try! JSONSerialization.data(withJSONObject: tempState, options: .prettyPrinted)
@@ -64,7 +67,7 @@ class DiscordLoginHandler: AbstractLoginHandler{
             var request = makeUrlRequest(url: "https://discordapp.com/api/users/@me", method: "GET")
             request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             
-            URLSession.shared.dataTask(.promise, with: request).map{
+			self.session.dataTask(.promise, with: request).map{
                 try JSONSerialization.jsonObject(with: $0.data) as! [String:Any]
             }.done{ data in
                 self.userInfo = data

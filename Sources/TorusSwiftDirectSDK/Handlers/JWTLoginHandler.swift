@@ -21,8 +21,10 @@ class JWTLoginHandler: AbstractLoginHandler{
     let defaultParams: [String:String]
     let jwtParams: [String:String]
     let connection: LoginProviders
+	
+	private var session: URLSession
     
-    public init(loginType: SubVerifierType = .web, clientID: String, redirectURL: String, browserRedirectURL: String?, jwtParams: [String: String], extraQueryParams: [String: String] = [:], connection: LoginProviders){
+	public init(loginType: SubVerifierType = .web, clientID: String, redirectURL: String, browserRedirectURL: String?, jwtParams: [String: String], extraQueryParams: [String: String] = [:], connection: LoginProviders, session: URLSession){
         self.loginType = loginType
         self.clientID = clientID
         self.redirectURL = redirectURL
@@ -31,6 +33,7 @@ class JWTLoginHandler: AbstractLoginHandler{
         self.browserRedirectURL = browserRedirectURL
         self.jwtParams = jwtParams
         self.defaultParams = ["scope": "openid profile email", "response_type": "token id_token", "nonce": self.nonce]
+		self.session = session
         
         let tempState = ["nonce": self.nonce, "redirectUri": self.redirectURL, "redirectToAndroid": "true"]
         let jsonData = try! JSONSerialization.data(withJSONObject: tempState, options: .prettyPrinted)
@@ -98,7 +101,7 @@ class JWTLoginHandler: AbstractLoginHandler{
             var request = makeUrlRequest(url: urlComponents.url!.absoluteString, method: "GET")
             request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             
-            URLSession.shared.dataTask(.promise, with: request).map{
+			self.session.dataTask(.promise, with: request).map{
                 try JSONSerialization.jsonObject(with: $0.data) as! [String:Any]
             }.done{ data in
                 self.userInfo = data

@@ -19,13 +19,16 @@ class FacebookLoginHandler: AbstractLoginHandler{
     let extraQueryParams: [String: String]
     let defaultParams: [String:String]
     
-    public init(loginType: SubVerifierType = .web, clientID: String, redirectURL: String, browserRedirectURL: String?, extraQueryParams: [String: String] = [:]){
+	private var session: URLSession
+	
+	public init(loginType: SubVerifierType = .web, clientID: String, redirectURL: String, browserRedirectURL: String?, extraQueryParams: [String: String] = [:], session: URLSession){
         self.loginType = loginType
         self.clientID = clientID
         self.redirectURL = redirectURL
         self.extraQueryParams = extraQueryParams
         self.browserRedirectURL = browserRedirectURL
         self.defaultParams = ["scope": "public_profile email", "response_type": "token"]
+		self.session = session
         
         let tempState = ["nonce": self.nonce, "redirectUri": self.redirectURL, "redirectToAndroid": "true"]
         let jsonData = try! JSONSerialization.data(withJSONObject: tempState, options: .prettyPrinted)
@@ -63,7 +66,7 @@ class FacebookLoginHandler: AbstractLoginHandler{
         if let accessToken = responseParameters["access_token"]{
             var request = makeUrlRequest(url: "https://graph.facebook.com/me?fields=name,email,picture.type(large)", method: "GET")
             request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-            URLSession.shared.dataTask(.promise, with: request).map{
+			self.session.dataTask(.promise, with: request).map{
                 try JSONSerialization.jsonObject(with: $0.data) as! [String:Any]
             }.done{ data in
                 self.userInfo = data

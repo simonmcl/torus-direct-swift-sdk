@@ -18,13 +18,16 @@ class TwitchLoginHandler: AbstractLoginHandler{
     let state: String
     let extraQueryParams: [String: String]
     let defaultParams: [String:String] = ["scope": "user:read:email", "response_type": "token", "force_verify": "false"]
+	
+	private var session: URLSession
     
-    public init(loginType: SubVerifierType = .web, clientID: String, redirectURL: String, browserRedirectURL: String?, extraQueryParams: [String: String] = [:]){
+	public init(loginType: SubVerifierType = .web, clientID: String, redirectURL: String, browserRedirectURL: String?, extraQueryParams: [String: String] = [:], session: URLSession){
         self.loginType = loginType
         self.clientID = clientID
         self.redirectURL = redirectURL
         self.extraQueryParams = extraQueryParams
         self.browserRedirectURL = browserRedirectURL
+		self.session = session
         
         let tempState = ["nonce": self.nonce, "redirectUri": self.redirectURL, "redirectToAndroid": "true"]
         let jsonData = try! JSONSerialization.data(withJSONObject: tempState, options: .prettyPrinted)
@@ -70,7 +73,7 @@ class TwitchLoginHandler: AbstractLoginHandler{
             request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             request.addValue("p560duf74b2bidzqu6uo0b3ot7qaao", forHTTPHeaderField: "Client-ID")
             
-            URLSession.shared.dataTask(.promise, with: request).map{
+			self.session.dataTask(.promise, with: request).map{
                 try JSONSerialization.jsonObject(with: $0.data) as! [String:Any]
             }.done{ data in
                 self.userInfo = data
