@@ -58,26 +58,6 @@ extension TorusSwiftDirectSDK{
         }
     }
     
-    
-    public func openURL(url: String, view: UIViewController?, modalPresentationStyle: UIModalPresentationStyle) {
-        os_log("opening URL: %s", log: getTorusLogger(log: TDSDKLogger.core, type: .info), type: .info, url)
-        
-        switch self.authorizeURLHandler {
-        case .external:
-            let handler = ExternalURLHandler()
-            handler.handle(URL(string: url)!, modalPresentationStyle: modalPresentationStyle)
-        case .sfsafari:
-            guard let controller = view else{
-                os_log("UIViewController not available. Please modify triggerLogin(controller:)", log: getTorusLogger(log: TDSDKLogger.core, type: .error), type: .error)
-                return
-            }
-            let handler = SFURLHandler(viewController: controller)
-            handler.handle(URL(string: url)!, modalPresentationStyle: modalPresentationStyle)
-        case .none:
-            os_log("Cannot access specified browser", log: getTorusLogger(log: TDSDKLogger.core, type: .error), type: .error)
-        }
-    }
-    
     func makeUrlRequest(url: String, method: String) -> URLRequest {
         var rq = URLRequest(url: URL(string: url)!)
         rq.httpMethod = method

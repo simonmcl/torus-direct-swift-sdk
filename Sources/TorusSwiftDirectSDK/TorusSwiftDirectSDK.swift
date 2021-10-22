@@ -197,6 +197,25 @@ open class TorusSwiftDirectSDK{
         // TODO: implement verifier
         return Promise(error: TSDSError.methodUnavailable)
     }
+	
+	open func openURL(url: String, view: UIViewController?, modalPresentationStyle: UIModalPresentationStyle) {
+		os_log("opening URL: %s", log: getTorusLogger(log: TDSDKLogger.core, type: .info), type: .info, url)
+		
+		switch self.authorizeURLHandler {
+		case .external:
+			let handler = ExternalURLHandler()
+			handler.handle(URL(string: url)!, modalPresentationStyle: modalPresentationStyle)
+		case .sfsafari:
+			guard let controller = view else{
+				os_log("UIViewController not available. Please modify triggerLogin(controller:)", log: getTorusLogger(log: TDSDKLogger.core, type: .error), type: .error)
+				return
+			}
+			let handler = SFURLHandler(viewController: controller)
+			handler.handle(URL(string: url)!, modalPresentationStyle: modalPresentationStyle)
+		case .none:
+			os_log("Cannot access specified browser", log: getTorusLogger(log: TDSDKLogger.core, type: .error), type: .error)
+		}
+	}
     
     /// Retrieve the Torus key from the nodes given an already known token. Useful if a custom login flow is required.
     /// - Parameters:
