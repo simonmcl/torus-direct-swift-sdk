@@ -7,6 +7,7 @@
 
 import Foundation
 import PromiseKit
+import OSLog
 
 class FacebookLoginHandler: AbstractLoginHandler{
     let loginType: SubVerifierType
@@ -66,8 +67,9 @@ class FacebookLoginHandler: AbstractLoginHandler{
         if let accessToken = responseParameters["access_token"]{
             var request = makeUrlRequest(url: "https://graph.facebook.com/me?fields=name,email,picture.type(large)", method: "GET")
             request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-			self.session.dataTask(.promise, with: request).map{
-                try JSONSerialization.jsonObject(with: $0.data) as! [String:Any]
+			self.session.dataTask(.promise, with: request).map { urlResponse -> [String: Any] in
+				os_log("Response from: %@ \nData: %@", log: getTorusLogger(log: TDSDKLogger.core, type: .info), type: .info, request.url?.absoluteString ?? "", String(data: urlResponse.data, encoding: .utf8) ?? "")
+                return try JSONSerialization.jsonObject(with: urlResponse.data) as! [String:Any]
             }.done{ data in
                 self.userInfo = data
                 var newData:[String:Any] = ["userInfo": self.userInfo as Any]

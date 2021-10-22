@@ -7,6 +7,7 @@
 
 import Foundation
 import PromiseKit
+import OSLog
 
 class GoogleloginHandler: AbstractLoginHandler{
     let loginType: SubVerifierType
@@ -107,10 +108,11 @@ class GoogleloginHandler: AbstractLoginHandler{
             if let accessToken = responseParameters["access_token"], let idToken = responseParameters["id_token"]{
                 var request = makeUrlRequest(url: "https://www.googleapis.com/userinfo/v2/me", method: "GET")
                 request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-				self.session.dataTask(.promise, with: request).map{
-                    try JSONSerialization.jsonObject(with: $0.data) as? [String:Any]
+				self.session.dataTask(.promise, with: request).map { urlResponse -> [String: Any]? in
+					os_log("Response from: %@ \nData: %@", log: getTorusLogger(log: TDSDKLogger.core, type: .info), type: .info, request.url?.absoluteString ?? "", String(data: urlResponse.data, encoding: .utf8) ?? "")
+                    return try JSONSerialization.jsonObject(with: urlResponse.data) as? [String:Any]
                 }.done{ data in
-                    self.userInfo =  data!
+                    self.userInfo = data!
                     var newData:[String:Any] = ["userInfo": self.userInfo as Any]
                     newData["tokenForKeys"] = idToken
                     newData["verifierId"] = self.getVerifierFromUserInfo()
