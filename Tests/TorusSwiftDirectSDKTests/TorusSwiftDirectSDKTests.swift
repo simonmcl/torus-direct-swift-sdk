@@ -17,7 +17,7 @@ final class TorusSwiftDirectSDKTests: XCTestCase {
         let subVerifier = [SubVerifierDetails(loginProvider: .jwt, clientId: fakeData.generateVerifier(), verifierName: expectedVerifier, redirectURL: fakeData.generateVerifier())]
         let factory = MockFactory()
         
-        let torusSwiftDirectSDK = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: expectedVerifier, subVerifierDetails: subVerifier, factory: factory)
+		let torusSwiftDirectSDK = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: expectedVerifier, subVerifierDetails: subVerifier, factory: factory, session: URLSession.shared)
         var mockTorusUtils = torusSwiftDirectSDK.torusUtils as! MockAbstractTorusUtils
         
         // Set Mock data
@@ -51,7 +51,7 @@ final class TorusSwiftDirectSDKTests: XCTestCase {
         let subVerifier = [SubVerifierDetails(loginProvider: .jwt, clientId: fakeData.generateVerifier(), verifierName: expectedVerifier, redirectURL: fakeData.generateVerifier())]
         let factory = MockFactory()
         
-        let torusSwiftDirectSDK = TorusSwiftDirectSDK(aggregateVerifierType: .singleIdVerifier, aggregateVerifierName: expectedVerifier, subVerifierDetails: subVerifier, factory: factory)
+		let torusSwiftDirectSDK = TorusSwiftDirectSDK(aggregateVerifierType: .singleIdVerifier, aggregateVerifierName: expectedVerifier, subVerifierDetails: subVerifier, factory: factory, session: URLSession.shared)
         var mockTorusUtils = torusSwiftDirectSDK.torusUtils as! MockAbstractTorusUtils
         
         // Set Mock data

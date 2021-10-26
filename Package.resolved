@@ -30,11 +30,11 @@
       },
       {
         "package": "FetchNodeDetails",
-        "repositoryURL": "https://github.com/torusresearch/fetch-node-details-swift",
+        "repositoryURL": "https://github.com/simonmcl/fetch-node-details-swift",
         "state": {
-          "branch": null,
-          "revision": "7d4a7d21af03a5776accdbb564b178aaf72c071c",
-          "version": "1.1.1"
+          "branch": "mocking",
+          "revision": "15807285e199dd0517ed967f9f328b8900880b5a",
+          "version": null
         }
       },
       {
@@ -96,7 +96,7 @@
         "repositoryURL": "https://github.com/simonmcl/torus-utils-swift",
         "state": {
           "branch": "mocking",
-          "revision": "8a27551ad9b352b7bbe11107bc7e4a50a8574c74",
+          "revision": "802218cb932d9b509ac19ad2390a75193cda3b04",
           "version": null
         }
       },

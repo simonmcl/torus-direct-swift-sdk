@@ -22,7 +22,7 @@ final class IntegrationTests: XCTestCase {
                                      redirectURL: "com.googleusercontent.apps.238941746713-vfap8uumijal4ump28p9jd3lbe6onqt4:/oauthredirect",
                                      browserRedirectURL: "https://scripts.toruswallet.io/redirect.html")
         
-        IntegrationTests.sdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: "torus-test-ios-public", subVerifierDetails: [sub], network: .ROPSTEN)
+		IntegrationTests.sdk = TorusSwiftDirectSDK(aggregateVerifierType: .singleLogin, aggregateVerifierName: "torus-test-ios-public", subVerifierDetails: [sub], session: URLSession.shared, network: .ROPSTEN)
     }
     
     func test_getTorusKey(){

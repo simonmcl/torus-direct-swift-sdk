@@ -39,13 +39,13 @@ open class TorusSwiftDirectSDK{
     ///   - factory: Providng mocking by implementing TDSDKFactoryProtocol.
     ///   - network: Etherum network to be used.
     ///   - loglevel: Indicates the log level of this instance. All logs lower than this level will be ignored.
-    public init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], factory: TDSDKFactoryProtocol, network: EthereumNetwork = .MAINNET, loglevel: OSLogType = .debug) {
+	public init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], factory: TDSDKFactoryProtocol, session: URLSession, network: EthereumNetwork = .MAINNET, loglevel: OSLogType = .debug) {
         tsSdkLogType = loglevel
         
         // factory method
         self.factory = factory
-        self.torusUtils = factory.createTorusUtils(nodePubKeys: [], loglevel: loglevel)
-        self.fetchNodeDetails = factory.createFetchNodeDetails(network: network)
+		self.torusUtils = factory.createTorusUtils(nodePubKeys: [], session: session, loglevel: loglevel)
+		self.fetchNodeDetails = factory.createFetchNodeDetails(network: network, sessionConfig: session.configuration)
         
         // verifier details
         self.aggregateVerifierName = aggregateVerifierName
@@ -58,9 +58,9 @@ open class TorusSwiftDirectSDK{
     ///   - aggregateVerifierType: Type of the verifier. Use `singleLogin` for single providers. Only `singleLogin` and `singleIdVerifier` is supported currently.
     ///   - aggregateVerifierName: Name of the verifier to be used..
     ///   - subVerifierDetails: Details of each subverifiers to be used.
-    public convenience init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails]){
+    public convenience init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], session: URLSession){
         let factory = TDSDKFactory()
-        self.init(aggregateVerifierType: aggregateVerifierType, aggregateVerifierName: aggregateVerifierName, subVerifierDetails: subVerifierDetails, factory: factory, network: .MAINNET, loglevel: .debug)
+		self.init(aggregateVerifierType: aggregateVerifierType, aggregateVerifierName: aggregateVerifierName, subVerifierDetails: subVerifierDetails, factory: factory, session: session, network: .MAINNET, loglevel: .debug)
     }
     
     /// Initiate an TorusSwiftDirectSDK instance.
@@ -69,19 +69,19 @@ open class TorusSwiftDirectSDK{
     ///   - aggregateVerifierName: Name of the verifier to be used..
     ///   - subVerifierDetails: Details of each subverifiers to be used.
     ///   - network: Etherum network to be used.
-    public convenience init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], network: EthereumNetwork){
+    public convenience init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], session: URLSession, network: EthereumNetwork){
         let factory = TDSDKFactory()
-        self.init(aggregateVerifierType: aggregateVerifierType, aggregateVerifierName: aggregateVerifierName, subVerifierDetails: subVerifierDetails, factory: factory, network: network, loglevel: .debug)
+		self.init(aggregateVerifierType: aggregateVerifierType, aggregateVerifierName: aggregateVerifierName, subVerifierDetails: subVerifierDetails, factory: factory, session: session, network: network, loglevel: .debug)
     }
     
-    public convenience init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], network: EthereumNetwork, loglevel: OSLogType = .debug){
+    public convenience init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], session: URLSession, network: EthereumNetwork, loglevel: OSLogType = .debug){
         let factory = TDSDKFactory()
-        self.init(aggregateVerifierType: aggregateVerifierType, aggregateVerifierName: aggregateVerifierName, subVerifierDetails: subVerifierDetails, factory: factory, network: network, loglevel: loglevel)
+		self.init(aggregateVerifierType: aggregateVerifierType, aggregateVerifierName: aggregateVerifierName, subVerifierDetails: subVerifierDetails, factory: factory, session: session, network: network, loglevel: loglevel)
     }
     
-    public convenience init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], loglevel: OSLogType = .debug){
+    public convenience init(aggregateVerifierType: verifierTypes, aggregateVerifierName: String, subVerifierDetails: [SubVerifierDetails], session: URLSession, loglevel: OSLogType = .debug){
         let factory = TDSDKFactory()
-        self.init(aggregateVerifierType: aggregateVerifierType, aggregateVerifierName: aggregateVerifierName, subVerifierDetails: subVerifierDetails, factory: factory, network: .MAINNET, loglevel: loglevel)
+		self.init(aggregateVerifierType: aggregateVerifierType, aggregateVerifierName: aggregateVerifierName, subVerifierDetails: subVerifierDetails, factory: factory, session: session, network: .MAINNET, loglevel: loglevel)
     }
     
     /// Retrieve information of Torus nodes from a predefined Etherum contract.
