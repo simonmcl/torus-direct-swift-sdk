@@ -33,7 +33,7 @@
         "repositoryURL": "https://github.com/simonmcl/fetch-node-details-swift",
         "state": {
           "branch": "mocking",
-          "revision": "15807285e199dd0517ed967f9f328b8900880b5a",
+          "revision": "2328192f9668ddafbd1e280909e0410146204a16",
           "version": null
         }
       },
@@ -96,7 +96,7 @@
         "repositoryURL": "https://github.com/simonmcl/torus-utils-swift",
         "state": {
           "branch": "mocking",
-          "revision": "802218cb932d9b509ac19ad2390a75193cda3b04",
+          "revision": "4c57c6abe3ef3f5f76c60ed20ada57186a76ebd0",
           "version": null
         }
       },
